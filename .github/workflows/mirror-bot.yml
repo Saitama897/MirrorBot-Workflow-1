@@ -1,6 +1,7 @@
-name: Demploy
+name: MirrorBot Environment
 
 on:
+  push:
   workflow_dispatch:
 
 defaults:
@@ -10,7 +11,7 @@ defaults:
 env:
   
 
- jobs:
+jobs:
 
    trigger:
     runs-on: ubuntu-latest
