@@ -1,7 +1,6 @@
-name: MirrorBot Environment
+name: Demploy
 
 on:
-  push:
   workflow_dispatch:
 
 defaults:
@@ -9,11 +8,14 @@ defaults:
     shell: bash
 
 env:
-  
+  # Change these values if you have forked it for your own works
+  GitHubMail: "dipeshmirror@gmail.com"
+  GitHubName: "dp0148755" 
+  Branch: "master"
 
 jobs:
 
-   trigger:
+  trigger:
     runs-on: ubuntu-latest
     steps:
       - name: Wait and Early Trigger next workflow
@@ -31,20 +33,19 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@main
-      
-      - name: Clone The Secret Mirror Repository
-        run: |
-          git clone https://${{ secrets.GH_TOKEN}}@github.com/${{ secrets.REPO }} source
 
       - name: Set Git Configs & Secrets
         run: |
-          git config --global user.email ${{ secrets.GHMAIL }}
-          git config --global user.name ${{ secrets.GHUSER }}
+          git config --global user.email ${GitHubMail}
+          git config --global user.name ${GitHubName}
           git config --global credential.helper store
-          echo "https://${{ secrets.GHUSER }}:${{ secrets.GH_TOKEN }}@github.com" > ~/.git-credentials
+          echo "https://${GitHubName}:${{ secrets.GH_TOKEN }}@github.com" > ~/.git-credentials
       # Cleanup The Actions Workspace Using Custom Composite Run Actions
       - uses: rokibhasansagar/slimhub_actions@main
-      
+
+      - name: Clone The Secret Mirror Repository
+        run: |
+          git clone https://${{ secrets.GH_TOKEN}}@github.com/${{ secrets.REPO }} -b ${Branch} source
       - name: Compile The Mirroring Docker Container
         run: |
           cd source || exit 1
